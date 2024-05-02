@@ -1,0 +1,67 @@
+﻿@model GymInfrastructure.ViewModel.RegisterViewModel
+<style>
+    .centered-form {
+        margin: 0 auto;
+        max-width: 400px; /* You can adjust the max-width as necessary */
+        text-align: center;
+    }
+
+        .centered-form input, .centered-form select {
+            width: 100%; /* Makes input and select boxes take the full width of the form */
+            display: block;
+        }
+
+        .centered-form label {
+            text-align: left;
+        }
+
+        .centered-form span {
+            display: block;
+            text-align: left;
+            color: red; /* Typically validation messages are displayed in red */
+        }
+</style>
+<h2 class="text-center mt-5">Реєстрація</h2>
+<form method="post" asp-controller="Account" asp-action="Register" class="centered-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div>
+        
+        <input class="form-control" placeholder="Email" asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+
+    <div>
+       
+        <input class="form-control mt-3" asp-for="Phone" placeholder="Телефон" />
+        <span asp-validation-for="Phone"></span>
+    </div>
+
+    <div>
+        
+        <input class="form-control  mt-3" asp-for="Name" placeholder="ПІБ" />
+        <span asp-validation-for="Name"></span>
+    </div>
+
+    <div class="form-group">
+      
+        <select id="GymId" placeholder="Адреса залу" asp-for="GymId" asp-items="ViewBag.GymId" class="form-control  mt-3"><option value="">Оберіть зал</option></select>
+        <span asp-validation-for="GymId"></span>
+    </div>
+
+    <div>
+
+        <input class="form-control  mt-3" asp-for="Password" placeholder="Пароль" />
+        <span asp-validation-for="Password"></span>
+    </div>
+
+    <div>
+     
+        <input class="form-control  mt-3" asp-for="PasswordConfirm" placeholder="Підтвердження паролю" />
+        <span asp-validation-for="PasswordConfirm"></span>
+    </div>
+
+    <div>
+        <input type="submit" class="btn btn-primary mt-3" value="Реєстрація" />
+    </div>
+</form>

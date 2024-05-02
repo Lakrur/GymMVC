@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Статистика";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; ">
+    <div id="chart1" ></div>
+</div>
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; ">
+    <div id="chart2"></div>
+
+</div>
+@section scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.load('current', { 'packages': ['bar'] });
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawChart2);
+        google.charts.setOnLoadCallback(drawChart3);
+        function drawChart() {
+
+            $.get('/api/Chart/JsonData', function (JsonData) {
+                var data = google.visualization.arrayToDataTable(JsonData, false);
+                var option = {
+                    title: "Співвідношення кількості клієнтів та залів",
+                    width: 1200,
+                    height: 800
+                };
+                chart = new google.visualization.PieChart(document.getElementById('chart1'));
+                chart.draw(data, option);
+            })
+        }
+        function drawChart2() {
+
+            $.get('/api/ColumnChart/JsonData2', function (JsonDataColumn) {
+                var data = google.visualization.arrayToDataTable(JsonDataColumn, false);
+                var option = {
+                    title: "Співвідношення групових класів та кількості клієнтів",
+                    width: 1200,
+                    height: 800,
+                    vAxis: {
+                        format: '0', 
+                        minValue: 0, 
+                        ticks: data.getDistinctValues(1).map(function (value) { return Math.round(value); })
+                    }
+                };
+                var chart = new google.visualization.ColumnChart(document.getElementById('chart2'));
+
+                chart.draw(data, option);
+            })
+        }
+        
+    </script>
+}

@@ -1,0 +1,112 @@
+﻿@model GymDomain.Model.Member
+
+@{
+    ViewData["Title"] = "Редагувати";
+}
+
+<h1 class="mt-3">Редагувати клієнта</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label>Видалити клієнта з групового класу</label>
+                <ul id="MemberClassItems">
+                    @foreach (var clas in Model.GroupClasses)
+                    {
+                        <p><input type="checkbox" class="form-check-input" name="classesToRemove" value="@clas.Id" /> @clas.Name</p>
+                    }
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GymId" class="control-label"></label>
+                <select id="GymId" asp-for="GymId" asp-items="ViewBag.GymId" class="form-control"><option value="">Оберіть зал</option></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupClasses" class="control-label"></label>
+                <select id="GroupClasses" asp-for="GroupClasses" class="form-control" name="selectedClassIds" multiple ></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SubscriptionId" class="control-label"></label>
+                <select asp-for="SubscriptionId" class="form-control" asp-items="ViewBag.SubscriptionId" disabled></select>
+                <span asp-validation-for="SubscriptionId" class="text-danger"></span>
+            </div>
+            
+            
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Зберегти" class="btn btn-primary mt-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-outline-secondary mt-3">Назад до списку</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function updateGroupClasses(gymId) {
+            $('#GroupClasses').empty().append(new Option('Не додавати класи', ''));
+            if (gymId) {
+                $.getJSON('/Members/GetGroupClassesByGym', { gymId: gymId }, function (classes) {
+                    if (classes.length > 0) {
+                        // Populate the dropdown with classes
+                        $.each(classes, function (i, groupClass) {
+                            $('#GroupClasses').append(new Option(groupClass.name, groupClass.id));
+                        });
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            $('#GymId').change(function () {
+                console.log('neg');
+                var gymId = $(this).val();
+                $('#SubscriptionId').empty().attr('disabled', true);
+
+                if (gymId) {
+                    $.getJSON('/Members/GetSubscriptionsByGym', { gymId: gymId }, function (classes) {
+                        if (classes.length > 0) {
+
+                            $.each(classes, function (i, subscription) {
+                                $('#SubscriptionId').append(new Option(subscription.name, subscription.id));
+                            });
+                            $('#SubscriptionId').removeAttr('disabled');
+                        }
+                    });
+                }
+            });
+
+            var gymId = $('#GymId').val(); // Get the currently selected gym ID
+            updateGroupClasses(gymId); // Update group classes on page load
+
+            $('#GymId').change(function () {
+                var selectedGymId = $(this).val();
+                updateGroupClasses(selectedGymId);
+            });
+        });
+    </script>
+} </script>
+

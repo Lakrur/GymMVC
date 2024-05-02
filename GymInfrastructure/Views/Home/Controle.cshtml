@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Керування";
+    int memberId = 0;
+}
+
+<div class="text-center my-5">
+    
+    @if (User.IsInRole("trainer"))
+    {
+        GymDomain.Model.Trainer trainer = null; // Явне вказання типу змінної
+       
+        foreach (var t in Model)
+        {
+            if (t.Email == User.Identity.Name)
+            {
+                trainer = t;
+                break;
+            }
+        }
+
+        if (trainer != null)
+        {
+            <h1 class="display-4 my-5">Вітаємо, @trainer.TrainerName</h1>
+        }
+    }
+    else if (User.IsInRole("user"))
+    {
+        GymDomain.Model.Member member = null; // Явне вказання типу змінної
+       
+        foreach (var m in Model)
+        {
+            if (m.Email == User.Identity.Name)
+            {
+                member = m;
+                memberId = member.Id;
+                break;
+            }
+        }
+
+        if (member != null)
+        {
+            <h1 class="display-4 my-5">Вітаємо,  @member.Name</h1>
+        }
+       
+
+    }
+    else if (User.IsInRole("admin"))
+    {
+       
+            <h1 class="display-4 my-5">Вітаємо, адміністратор</h1>
+        
+
+
+    }
+    <div class="btn-group-vertical my-1">
+        <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="Home" asp-action="Index">Головна</a>
+        <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="Gyms" asp-action="Index">Зали</a>
+        @if (!User.IsInRole("trainer"))
+                    {
+        <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="Subscriptions" asp-action="Index">Підписки</a>
+                    }
+        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+    {
+        <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="Members" asp-action="Index">Клієнти</a>
+    }
+        @if (User.Identity.IsAuthenticated && User.IsInRole("user"))
+        {
+            <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="Members" asp-action="Details" asp-route-id=@memberId>Мій профіль</a>
+        }
+        
+        <a class="btn btn-dark btn-lg my-1 " asp-area="" asp-controller="Home" asp-action="Statistics">Статистика</a>
+        <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="GroupClasses" asp-action="Index">Групові класи</a>
+        <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="Trainers" asp-action="Index">Тренери</a>
+         @if (User.IsInRole("admin"))
+                        {
+        <a class="btn btn-dark btn-lg my-1" asp-area="" asp-controller="Roles" asp-action="Index">Ролі</a>
+                        }
+        @if (User.IsInRole("trainer"))
+                    {
+            <a class="btn btn-dark btn-lg my-1" asp-area=""  asp-controller="GroupClasses" asp-action="TrainerClasses">Мої класи</a>
+                    }
+        @if (User.IsInRole("admin"))
+        {
+        <div>
+            
+                <div>
+                    <h3 class="mt-4">Оберіть excel-файл для завантаження</h3>
+                    @using (Html.BeginForm("Import", "Gyms", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
+                    {
+                        <div>
+
+                            <input type="file" class="form-control" name="fileExcel" class="form-label" id="fileExcel" />
+                            <div class="mt-2">
+                                <input class=" btn btn-primary" type="submit" value="Завантажити" />
+                            </div>
+                        </div>
+                    }
+                </div>
+
+
+
+                </div>
+                <h3 class="mt-3">Або</h3>
+                <a class="btn btn-primary mb-3 mt-3" type="=submit" asp-area="" asp-controller="Gyms" asp-action="Export">Експортувати у файл</a>
+            }
+</div>

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<GymDomain.Model.Gym>
+
+@{
+    ViewData["Title"] = "Зали";
+}
+
+<h1 class="mt-3 text-center">Зали</h1>
+
+<p class="text-center">
+    @if (User.IsInRole("admin"))
+                    {
+    <a asp-action="Create" class="btn btn-outline-primary">Додати новий зал</a>
+                    }
+</p>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <!-- Define each card to take up 3 columns in a 12-column grid, resulting in 4 cards per row -->
+            <div class="col-md-3  mb-4">
+                <div class="card border-success h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Adress)</h5>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Schedule)</p>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Equipment)</p>
+                    </div>
+                    <div class="card-footer">
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm ">Редагувати</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info btn-sm ">Детально</a>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm ">Видалити</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

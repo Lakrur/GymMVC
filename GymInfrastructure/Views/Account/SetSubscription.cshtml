@@ -1,0 +1,35 @@
+﻿@model IEnumerable<GymDomain.Model.Subscription>
+
+@{
+    ViewData["Title"] = "Оберіть підписку";
+}
+<h1 class="mt-5 text-center">Оберіть підписку</h1>
+
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card border-primary h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-lg-center  text-center ">@Html.DisplayFor(modelItem => item.Type)</h5>
+                        <p class="card-text text-center">@Html.DisplayFor(modelItem => item.Description) $</p>
+                        <p class="card-text text-center">Ціна: @Html.DisplayFor(modelItem => item.Price) $</p>
+                        <p class="card-text text-center">Тривалість: @Html.DisplayFor(modelItem => item.Duration) місяців</p>
+
+                    </div>
+                    
+                    <div class="card-footer text-center">
+                        <form asp-action="SetSubscription" asp-controller="Account" method="post">
+                            <input type="hidden" name="subscriptionId" value="@item.Id" />
+                            <input type="hidden" name="memberId" value="@ViewBag.MemberId" />
+                            <button type="submit" class="btn btn-secondary mt-3">Обрати</button>
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

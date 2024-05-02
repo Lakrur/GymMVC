@@ -1,0 +1,72 @@
+﻿@model GymDomain.Model.GroupClass
+
+@{
+    ViewData["Title"] = "Деталі";
+}
+
+<h1 class="mt-4">Деталі</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Room)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Room)
+        </dd>
+        <dt class="col-sm-2">
+            Тренери
+        </dt>
+        <ul class="list-unstyled">
+            @foreach (var trainer in Model.Trainers)
+            {
+                <li><a asp-action="Details" asp-controller="Trainers" asp-route-id="@trainer.Id">@trainer.TrainerName</a></li>
+            }
+        </ul>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Schedule)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Schedule)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Gym)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Gym.Adress)
+        </dd>
+    </dl>
+</div>
+
+<div>
+        @if (User.IsInRole("admin"))
+                        {
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-primary btn-sm me-2">Редагувати</a>
+    }
+
+    <a onclick="history.back()" class="btn btn-outline-secondary btn-sm ">Назад</a>
+    @if (User.IsInRole("user"))
+                        {
+    @if (!Model.Members.Any(member => member.Email == User.Identity.Name))
+    {
+        <a asp-action="Rollin" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-sm mx-2">Записатися</a>
+    }
+    else
+    {
+        <a asp-action="UnRollin" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-sm mx-2">Покинути</a>
+    }
+                        }
+</div>

@@ -1,0 +1,81 @@
+﻿@model GymDomain.Model.Trainer
+
+@{
+    ViewData["Title"] = "Додати тренера";
+}
+
+<h1 class="mt-3">Додати тренера</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+     
+            
+            <div class="form-group">
+                <label asp-for="TrainerName" class="control-label"></label>
+                <input asp-for="TrainerName" class="form-control" />
+                <span asp-validation-for="TrainerName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GymId" class="control-label"></label>
+                <select id="GymId" asp-for="GymId" class="form-control" asp-items="ViewBag.GymId"><option value="">Оберіть зал</option></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="GroupClasses" class="control-label"></label>
+                <select id="GroupClasses" asp-for="GroupClasses" class="form-control" name="selectedClassIds">
+                    <option value="">Не має класу</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Додати" class="btn btn-primary mt-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Назад до списку</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#GymId').change(function () {
+                var gymId = $(this).val();
+                $('#GroupClasses').empty().append(new Option('Не має класу', ''));
+
+                if (gymId) {
+                    // Fetch classes for the selected gym
+                    $.getJSON('/Members/GetGroupClassesByGym', { gymId: gymId }, function (classes) {
+                        if (classes.length > 0) {
+                            // Populate the dropdown with classes
+                            $.each(classes, function (i, groupClass) {
+                                $('#GroupClasses').append(new Option(groupClass.name, groupClass.id));
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+}
+

@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var returnUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+<div class="container " style="margin-top:15vh;">
+    <div class="row align-items-center">
+
+        <div class="col-lg-6 col-md-12 ">
+            <h1 class="display-3">
+                <span class="text-secondary">EgoGym</span>
+                <span> - найкращий спортзал у Києві</span>
+            </h1>
+            <h4 class="display-8 " style="margin-top:6vh;">Це ваша можливість стати кращою версією самого себе!</h4>
+            <p >Новий погляд на те, яким повинен бути спортивний клуб та шлях до здорового і досяжного способу життя</p>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a class="btn btn-lg btn-primary mt-2" asp-route-returnUrl="/" asp-action="Register" asp-controller="Account">Зареєструватися</a>
+             
+            }
+            
+        </div>
+        <div class="col-lg-6 col-md-12 text-center ">
+            <img src="~/img/logo.png" alt="Logo" >
+        </div>
+       
+
+    </div>
+</div>

@@ -1,0 +1,73 @@
+﻿@using GymDomain.Model;
+@inject Microsoft.AspNetCore.Identity.UserManager<User> userManager
+@inject DbgymContext dbContext
+
+@using Microsoft.AspNetCore.Identity
+
+@model IEnumerable<GymDomain.Model.Subscription>
+
+@{
+    ViewData["Title"] = "Підписки";
+}
+
+<h1 class="mt-3 text-center">Підписки</h1>
+
+<p class="text-center">
+    @if (User.IsInRole("admin"))
+        {
+    <a asp-action="Create" class="btn btn-outline-primary">Створити нову підписку</a>
+        }
+    @if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+    {
+        <a asp-action="RemoveSubscription" asp-controller="Account" class="btn btn-outline-danger btn-sm mx-2">Скасувати підписку</a>
+        <a asp-action="SetSubscription" asp-controller="Account" class="btn btn-outline-primary btn-sm ">Змінити підписку</a>
+    }
+   
+</p>
+
+<!-- Start of the cards layout -->
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            var currentUser = await userManager.GetUserAsync(User);
+            Member? member;
+            int? subscriptionId;
+            if (currentUser != null )
+            {
+                member = dbContext.Members.FirstOrDefault(m => m.Email == currentUser.Email);
+                subscriptionId = member?.SubscriptionId;
+            }
+            else{
+                subscriptionId = null;
+            }
+            <!-- Define each card to take up 4 columns in a 12-column grid, resulting in 3 cards per row -->
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card @(subscriptionId != null && subscriptionId == item.Id ? "border-success" : "border-primary") h-100">
+
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Type)</h5>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+                        <p class="card-text">Ціна: @Html.DisplayFor(modelItem => item.Price)</p>
+                        <p class="card-text">Тривалість: @Html.DisplayFor(modelItem => item.Duration)</p>
+                        <p class="card-text">Зал: @Html.DisplayFor(modelItem => item.Gym.Adress)</p>
+                    </div>
+                    <div class="card-footer">
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm me-1">Редагувати</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn @(subscriptionId != null && subscriptionId == item.Id ? "btn-outline-success" : "btn-outline-primary")  btn-sm ">Детально</a>
+                       
+                        
+                        @if (User.IsInRole("admin"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm mx-1">Видалити</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

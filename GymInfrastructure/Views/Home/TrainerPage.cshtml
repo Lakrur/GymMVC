@@ -1,0 +1,64 @@
+﻿@model GymDomain.Model.Trainer
+
+@{
+    ViewData["Title"] = "Сторінка тренера";
+}
+
+<style>
+    /* Increasing text size for all content within the container */
+    .trainer-page-container * {
+        font-size: 1em; /* You can adjust the size as needed */
+    }
+</style>
+
+<div class=" my-5">
+    <h1 class="display-4 my-5">Вітаємо, @Model.TrainerName</h1>
+    <hr />
+
+    <div class="card border-primary trainer-page-container">
+        <h2 class="text-start mx-4 mt-4"><strong>Особиста інформація</strong></h2>
+
+        <div class="row mx-4">
+            <div class="col-sm-3 ">
+                <div class="text-start mb-2"><strong class="text-left">@Html.DisplayNameFor(m => m.Phone)</strong></div>
+                
+                <div class="text-start mb-2"><strong>@Html.DisplayNameFor(m => m.Gym)</strong></div>
+
+                <div> <strong class="text-start mb-5">@Html.DisplayNameFor(m => m.Email)</strong></div>
+            </div>
+            <div class="col-sm-3">
+                <div class="text-start mb-2">
+                    @Model.Phone
+                    </div>
+                <div class="text-start mb-2">
+                        @Model.Gym.Adress
+                        </di>
+                <div class="mb-5">   @Model.Email</div>
+            </div>
+            
+           
+            
+        </div>
+       
+       
+    </div>
+    <div>
+            <h2 class="text-start mx-4 mt-4"><strong>Розклад моїх класів</strong></h2>
+            <div class="row">
+            <div class="col-sm-2 mx-4 ">
+            @foreach (var groupClass in Model.GroupClasses)
+            {
+                <div>@groupClass.Name</div>
+            }
+        </div>
+            <div class="col-sm-2 mx-4 ">
+            @foreach (var groupClass in Model.GroupClasses)
+            {
+                <div>@groupClass.Schedule</div>
+            }
+        </div>
+            </div>
+    </div>
+    <a asp-action="Edit" asp-controller="Home" asp-route-id="@Model?.Id" class="btn btn-outline-primary btn-sm me-2 mt-4">Редагувати особисту інформацію</a>
+   
+</div>

@@ -1,0 +1,70 @@
+﻿@model GymDomain.Model.Gym
+
+@{
+    ViewData["Title"] = "Детально про зал";
+}
+
+<h1 class="mt-3 text-center">@Html.DisplayFor(model => model.Adress)</h1>
+
+<div>
+    <dl class="row">
+        <div class="col-6">
+            <dt class="col-sm-12">
+                @Html.DisplayNameFor(model => model.Equipment)
+            </dt>
+            <dd class="col-sm-12">
+                @Html.DisplayFor(model => model.Equipment)
+            </dd>
+            <h6 class="mt-5">Групові класи</h6>
+            <ul class="list-unstyled " >
+                @foreach (var groupClass in Model.GroupClasses)
+                {
+                    <li><a asp-action="Details" asp-controller="GroupClasses" asp-route-id="@groupClass.Id">@groupClass.Name</a></li>
+                }
+            </ul>
+        </div>
+        <div class="col-6 ">
+
+            <dt class="col-sm-12 text-end">
+                    @Html.DisplayNameFor(model => model.Schedule)
+            </dt>
+            <dd class="col-sm-12 text-end">
+                    @Html.DisplayFor(model => model.Schedule)
+            </dd>
+
+            <h6 class="text-end mt-5">Підписки</h6>
+            <ul class="list-unstyled text-end">
+                @foreach (var subscription in Model.Subscriptions)
+                {
+                    <li><a asp-action="Details" asp-controller="Subscriptions" asp-route-id="@subscription.Id">@subscription.Type</a></li>
+                }
+            </ul>
+        </div>
+    </dl>
+    <dl class="row">
+        <h6>Тренери</h6>
+        <ul class="list-unstyled">
+            @foreach (var trainer in Model.Trainers)
+            {
+                <li><a asp-action="Details" asp-controller="Trainers" asp-route-id="@trainer.Id">@trainer.TrainerName</a></li>
+            }
+        </ul>
+    </dl>
+    <dl class="row">
+        <h6>Клієнти</h6>
+        <ul class="list-unstyled">
+            @foreach (var member in Model.Members)
+            {
+                <li><a asp-action="Details" asp-controller="Members" asp-route-id="@member.Id">@member.Name</a></li>
+            }
+        </ul>
+    </dl>
+</div>
+
+<div>
+       @if (User.IsInRole("admin"))
+        {
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-primary btn-sm me-2">Редагувати</a>
+        }
+    <a onclick="history.back()" class="btn btn-outline-secondary btn-sm ">Назад</a>
+</div>
